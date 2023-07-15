@@ -4,12 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon server.js",
+    "lint": "prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "DrummerHead",
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
+    "nodemon": "^3.0.1",
     "sqlite3": "^5.1.6"
+  },
+  "devDependencies": {
+    "prettier": "3.0.0"
   }
 }
