@@ -1,11 +1,13 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
 const bodyParser = require('body-parser');
 
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use('/pics', express.static(path.join(__dirname, 'pics')));
 
 const port = 7777;
 app.listen(port, () => {
@@ -123,6 +125,7 @@ INSERT INTO comparisons (
 });
 
 app.use((req, res) => {
-  console.log('something happened and I am supposed to 404');
-  res.status(404).send('404 brokeiusha');
+  const errorMessage = `404: ${req.url} does not exist`;
+  console.log(errorMessage);
+  res.status(404).json({ error: errorMessage });
 });
