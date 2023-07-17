@@ -41,6 +41,7 @@ SELECT picId,
     [],
     function (err, rows) {
       if (err) {
+        console.log(err.message);
         return res.status(400).json({ error: err.message });
       }
       res.json({
@@ -51,75 +52,30 @@ SELECT picId,
   );
 });
 
-// GET all comparisons
-app.get('/api/v1/comparisons', (req, res) => {
+// GET all rankings
+app.get('/api/v1/ranking', (req, res) => {
   db.all(
     `
-SELECT compId,
-       a,
-       b,
-       createdOn
-  FROM comparisons;
+SELECT rank,
+       picId,
+       path,
+       rankedOn
+  FROM ranking
+       JOIN pics USING (
+         picId
+       )
+ ORDER BY rank;
 `,
     [],
     function (err, rows) {
       if (err) {
+        console.log(err.message);
         return res.status(400).json({ error: err.message });
       }
       res.json({
         message: 'success',
         data: rows,
       });
-    }
-  );
-});
-
-// POST a comparison
-app.post('/api/v1/comparison', (req, res, next) => {
-  let errors = [];
-  if (!req.body.a) {
-    errors.push('No better image');
-  }
-  if (!req.body.b) {
-    errors.push('No worse image');
-  }
-  if (req.body.a === req.body.b) {
-    errors.push('A and B can not be the same');
-  }
-  if (errors.length > 0) {
-    return res.status(400).json({ error: errors.join(', ') });
-  }
-
-  const data = {
-    a: req.body.a,
-    b: req.body.b,
-  };
-
-  db.run(
-    `
-INSERT INTO comparisons (
-                          a,
-                          b,
-                          createdOn
-                        )
-                        VALUES (
-                          ?,
-                          ?,
-                          date('now')
-                        );
-`,
-    [data.a, data.b],
-    function (err) {
-      if (err) {
-        return res.status(400).json({ error: err.message });
-      }
-      const response = {
-        message: 'success',
-        data,
-        id: this.lastID,
-      };
-      res.json(response);
-      console.log(response);
     }
   );
 });

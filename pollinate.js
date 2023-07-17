@@ -15,8 +15,9 @@ db.serialize(() => {
   db.run(
     `
 CREATE TABLE pics (
-    picId INTEGER PRIMARY KEY,
-    path  TEXT
+  picId   INTEGER PRIMARY KEY,
+  path    TEXT    NOT NULL,
+  addedOn TEXT    NOT NULL
 );
 `,
     (err) => {
@@ -28,14 +29,16 @@ CREATE TABLE pics (
         );
         const stmt = `
 INSERT INTO pics (
-                   path
+                   path,
+                   addedOn
                  )
                  VALUES (
-                   ?
+                   ?,
+                   date('now')
                  );
 `;
 
-        fs.readdir('../../', (err, files) => {
+        fs.readdir('./pics', (err, files) => {
           if (err) {
             return err.message;
           }
@@ -50,19 +53,12 @@ INSERT INTO pics (
 
   db.run(
     `
-CREATE TABLE IF NOT EXISTS comparisons (
-  compId    INTEGER PRIMARY KEY,
-  a         INTEGER NOT NULL,
-  b         INTEGER NOT NULL,
-  createdOn TEXT    NOT NULL,
-  CHECK (a != b),
+CREATE TABLE IF NOT EXISTS ranking (
+  rank     INTEGER PRIMARY KEY,
+  picId    INTEGER NOT NULL,
+  rankedOn TEXT    NOT NULL,
   FOREIGN KEY (
-    a
-  )
-  REFERENCES pics (picId) ON UPDATE CASCADE
-                          ON DELETE CASCADE,
-  FOREIGN KEY (
-    b
+    picId
   )
   REFERENCES pics (picId) ON UPDATE CASCADE
                           ON DELETE CASCADE
@@ -72,7 +68,28 @@ CREATE TABLE IF NOT EXISTS comparisons (
       if (err) {
         return console.log(err);
       } else {
-        console.log('all good with comparisons table');
+        console.log('all good with ranking table');
+      }
+    }
+  );
+  db.run(
+    `
+CREATE TABLE IF NOT EXISTS rankingBkp (
+  rank     INTEGER PRIMARY KEY,
+  picId    INTEGER NOT NULL,
+  rankedOn TEXT    NOT NULL,
+  FOREIGN KEY (
+    picId
+  )
+  REFERENCES pics (picId) ON UPDATE CASCADE
+                          ON DELETE CASCADE
+);
+`,
+    (err) => {
+      if (err) {
+        return console.log(err);
+      } else {
+        console.log('all good with rankingBkp table');
       }
     }
   );
