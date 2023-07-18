@@ -7,7 +7,9 @@ const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use('/pics', express.static(path.join(__dirname, 'pics')));
+
+const picsFolder = '/pics/';
+app.use(picsFolder, express.static(path.join(__dirname, 'pics')));
 
 const port = 7777;
 app.listen(port, () => {
@@ -24,6 +26,10 @@ const db = new sqlite3.Database('comparo.db', (err) => {
   }
 });
 
+const addPicPath = (pic) => ({
+  ...pic,
+  path: `${picsFolder}${pic.path}`,
+});
 // homepage with cool message
 app.get('/', (req, res) => {
   console.log('get /');
@@ -46,7 +52,7 @@ SELECT picId,
       }
       res.json({
         message: 'success',
-        data: rows,
+        data: rows.map(addPicPath),
       });
     }
   );
@@ -74,7 +80,7 @@ SELECT rank,
       }
       res.json({
         message: 'success',
-        data: rows,
+        data: rows.map(addPicPath),
       });
     }
   );
