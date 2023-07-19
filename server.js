@@ -59,7 +59,8 @@ SELECT rank,
       }
       res.json({
         message: 'success',
-        data: rows.map(addPicPath),
+        ranks: rows.map(addPicPath),
+        picsRanked: rows.length,
       });
     }
   );
@@ -129,10 +130,24 @@ ROLLBACK TRANSACTION;
     db.run(`
 COMMIT TRANSACTION;
 `);
-  });
-
-  return res.json({
-    message: 'success',
+    db.get(
+      `
+SELECT count(*) AS picsRanked
+  FROM ranking;
+`,
+      (err, row) => {
+        if (err) {
+          console.log(err.message);
+          return res.status(400).json({ error: err.message });
+        }
+        console.log('count rankings:');
+        console.log(row.picsRanked);
+        return res.json({
+          message: 'success',
+          picsRanked: row.picsRanked,
+        });
+      }
+    );
   });
 });
 
@@ -165,10 +180,11 @@ SELECT picId,
       console.log(oneNonRanked);
       res.json({
         message: 'success',
-        data: {
+        newPic: {
           ...oneNonRanked,
           path: `${picsFolder}${oneNonRanked.path}`,
         },
+        picsToBeRanked: rows.length,
       });
     }
   );
