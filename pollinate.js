@@ -16,7 +16,7 @@ db.serialize(() => {
     `
 CREATE TABLE pics (
   picId   INTEGER PRIMARY KEY,
-  path    TEXT    NOT NULL,
+  path    TEXT    NOT NULL UNIQUE,
   addedOn TEXT    NOT NULL
 );
 `,
@@ -55,7 +55,7 @@ INSERT INTO pics (
     `
 CREATE TABLE IF NOT EXISTS ranking (
   rank     INTEGER PRIMARY KEY,
-  picId    INTEGER NOT NULL,
+  picId    INTEGER NOT NULL UNIQUE,
   rankedOn TEXT    NOT NULL,
   FOREIGN KEY (
     picId
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS ranking (
     `
 CREATE TABLE IF NOT EXISTS rankingBkp (
   rank     INTEGER PRIMARY KEY,
-  picId    INTEGER NOT NULL,
+  picId    INTEGER NOT NULL UNIQUE,
   rankedOn TEXT    NOT NULL,
   FOREIGN KEY (
     picId
