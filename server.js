@@ -60,7 +60,7 @@ SELECT rank,
       res.json({
         message: 'success',
         ranks: rows.map(addPicPath),
-        picsRanked: rows.length,
+        rankedAmount: rows.length,
       });
     }
   );
@@ -88,6 +88,11 @@ app.post('/api/v1/ranking', (req, res, next) => {
   }
 
   db.serialize(() => {
+    // Originally the idea of this transaction was to copy everything
+    // from ranking to rankingBkp and then delete ranking and recreate
+    // with whatever came down the wire. Gotta do this if I want to add
+    // an undo feature and I guess it should be nice in general... like
+    // a good database christian or something.
     db.run(`
 BEGIN TRANSACTION;
 `);
@@ -132,7 +137,7 @@ COMMIT TRANSACTION;
 `);
     db.get(
       `
-SELECT count(*) AS picsRanked
+SELECT count(*) AS rankedAmount
   FROM ranking;
 `,
       (err, row) => {
@@ -141,10 +146,10 @@ SELECT count(*) AS picsRanked
           return res.status(400).json({ error: err.message });
         }
         console.log('count rankings:');
-        console.log(row.picsRanked);
+        console.log(row.rankedAmount);
         return res.json({
           message: 'success',
-          picsRanked: row.picsRanked,
+          rankedAmount: row.rankedAmount,
         });
       }
     );
@@ -176,6 +181,15 @@ SELECT picId,
         return res.status(400).json({ error: err.message });
       }
       console.log('GET /api/v1/one-non-ranked');
+      if (rows.length === 0) {
+        console.log('no more pictures to rank!');
+        return res.json({
+          message: 'success',
+          newPic: { path: '', id: -7 },
+
+          unrankedAmount: rows.length,
+        });
+      }
       const oneNonRanked = getRandItem(rows);
       console.log(oneNonRanked);
       res.json({
@@ -184,7 +198,7 @@ SELECT picId,
           ...oneNonRanked,
           path: `${picsFolder}${oneNonRanked.path}`,
         },
-        picsToBeRanked: rows.length,
+        unrankedAmount: rows.length,
       });
     }
   );
