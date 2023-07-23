@@ -66,39 +66,31 @@ SELECT rank,
   );
 });
 
-// POST a ranking
-app.post('/api/v1/ranking', (req, res, next) => {
-  console.log('hit /api/v1/ranking with POST');
-  let errors = [];
-  // TODO: If I don't find more possible errors, remove array
-
-  const ids = req.body.map((r) => r.picId);
-  const idSet = new Set(ids);
-
-  if (ids.length !== idSet.size) {
-    errors.push(
-      'Ids of ranks have to be unique; no repeated Pics! No soup for you!'
-    );
-  }
-
-  if (errors.length > 0) {
-    const errorMessage = errors.join(', ');
-    console.log(errorMessage);
-    return res.status(400).json({ error: errorMessage });
-  }
+// POST single ranking and edit ranking table
+app.post('/api/v1/one-ranking', (req, res, next) => {
+  console.log('POST /api/v1/one-ranking with:');
+  console.dir(req.body);
 
   db.serialize(() => {
-    // Originally the idea of this transaction was to copy everything
-    // from ranking to rankingBkp and then delete ranking and recreate
-    // with whatever came down the wire. Gotta do this if I want to add
-    // an undo feature and I guess it should be nice in general... like
-    // a good database christian or something.
     db.run(`
 BEGIN TRANSACTION;
 `);
-    db.run(`
-DELETE FROM ranking;
-`);
+
+    // Make all the ranks the negative version of themselves
+    // minus one. This is to shift down all the rankings.
+    // I can't do a +1 because it seems that it is done one
+    // by one and by adding one to one it becomes the same
+    // as the one after it, breaking the UNIQUE CONSTRAIN
+    db.run(
+      `
+UPDATE ranking
+   SET rank = -rank - 1
+ WHERE rank >= ?;
+`,
+      req.body.rank
+    );
+
+    // Insert the new fella
     const statement = db.prepare(`
 INSERT INTO ranking (
                       rank,
@@ -112,25 +104,32 @@ INSERT INTO ranking (
                     );
 `);
 
-    req.body.forEach((row) => {
-      statement.run(row.rank, row.picId, row.rankedOn, (err) => {
-        if (err) {
-          console.error('When trying to insert');
-          console.error(row);
-          console.error(err.message);
-          console.error('Rolling back transaction');
-          // this is not gonna work
-          // https://github.com/TryGhost/node-sqlite3/issues/304
-          // it seems I should be using better-sqlite
-          // https://github.com/WiseLibs/better-sqlite3
-          db.run(`
+    statement.run(req.body.rank, req.body.picId, req.body.rankedOn, (err) => {
+      if (err) {
+        console.error('When trying to insert');
+        console.error(row);
+        console.error(err.message);
+        console.error('Rolling back transaction');
+        // this is not gonna work
+        // https://github.com/TryGhost/node-sqlite3/issues/304
+        // it seems I should be using better-sqlite
+        // https://github.com/WiseLibs/better-sqlite3
+        db.run(`
 ROLLBACK TRANSACTION;
 `);
-          return res.status(400).json({ error: err.message });
-        }
-      });
+        return res.status(400).json({ error: err.message });
+      }
     });
     statement.finalize();
+
+    // put the rankings back to their positive selves
+    db.run(
+      `
+UPDATE ranking
+   SET rank = -rank
+ WHERE rank < 0;
+`
+    );
 
     db.run(`
 COMMIT TRANSACTION;
