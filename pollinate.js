@@ -64,6 +64,15 @@ CREATE TABLE IF NOT EXISTS ranking (
                           ON DELETE CASCADE
 );
 `,
+    // It's not as easy as on update cascade on delete cascade
+    // because if a pic is deleted then in worst case scenario
+    // (the pic being number one in ranking) then all the rank
+    // of each row should change to reflect the fact the pic
+    // doesn't exist anymore. There can't be any "holes" in the
+    // ranking. Wondering if I should do the change at the database
+    // level of the backend code level... or just assume a pic will
+    // never be deleted. Probably should do it at the database level
+    // for practice. We'll put it in the backlog (to never be seen again).
     (err) => {
       if (err) {
         return console.log(err);

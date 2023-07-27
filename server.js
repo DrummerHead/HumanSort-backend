@@ -203,6 +203,72 @@ SELECT picId,
   );
 });
 
+// POST single ranking and edit ranking table
+app.post('/api/v1/new-rank-order', (req, res, next) => {
+  console.log('POST /api/v1/new-rank-order with:');
+  console.dir(req.body);
+
+  // lower ranking mens better; I'M NUMBAH ONE BABY WOOOOO!!!
+  const upgradeRank = req.body.newRank < req.body.originalRank;
+
+  db.serialize(() => {
+    db.run(`
+BEGIN TRANSACTION;
+`);
+
+    // Different update queries for the intermediate pictures
+    // depending on whether new pic ranking
+    // is moving up or down
+    // ids go negative temporarily to avoid unique constraints
+    db.run(
+      upgradeRank
+        ? `
+UPDATE ranking
+   SET rank = -rank - 1
+ WHERE rank < ? AND
+       rank >= ?;
+`
+        : `
+UPDATE ranking
+   SET rank = -rank + 1
+ WHERE rank > ? AND
+       rank <= ?;
+`,
+      req.body.originalRank,
+      req.body.newRank
+    );
+
+    // Change rank and rankedOn of picture that is moving in rank
+    db.run(
+      `
+UPDATE ranking
+   SET rank = ?,
+       rankedOn = ?
+ WHERE rank = ?;
+`,
+      req.body.newRank,
+      req.body.rankedOn,
+      req.body.originalRank
+    );
+
+    // Put the rankings back to their positive selves
+    db.run(
+      `
+UPDATE ranking
+   SET rank = -rank
+ WHERE rank < 0;
+`
+    );
+
+    db.run(`
+COMMIT TRANSACTION;
+`);
+    return res.json({
+      message: 'success',
+    });
+  });
+});
+
 app.use((req, res) => {
   const errorMessage = `404: ${req.url} does not exist`;
   console.log(errorMessage);
