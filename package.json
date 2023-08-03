@@ -2,10 +2,10 @@
   "name": "comparo-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./build/index.js",
   "scripts": {
     "build": "npx tsc",
-    "start": "concurrently \"npx tsc --watch\" \"nodemon ./build/index.js\"",
+    "start": "concurrently -n \"TSC,EXP\" -c \"auto\" \"npx tsc --watch\" \"nodemon ./build/index.js\"",
     "lint": "prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
