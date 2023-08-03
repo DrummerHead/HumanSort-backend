@@ -1,5 +1,6 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
+const process = require('process');
 const path = require('path');
 const bodyParser = require('body-parser');
 
@@ -9,14 +10,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 const picsFolder = '/pics/';
-app.use(picsFolder, express.static(path.join(__dirname, 'pics')));
+
+const getAbsolutePath = (relativePath) =>
+  path.join(process.cwd(), relativePath);
+
+app.use(picsFolder, express.static(getAbsolutePath(picsFolder)));
 
 const port = 7777;
 app.listen(port, () => {
   console.log(`Runnin' like crazy on ${port}`);
 });
 
-const db = new sqlite3.Database('comparo.db', (err) => {
+const db = new sqlite3.Database(getAbsolutePath('comparo.db'), (err) => {
   if (err) {
     console.error(err.message);
     throw err;
