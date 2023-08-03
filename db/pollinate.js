@@ -38,7 +38,7 @@ INSERT INTO pics (
                  );
 `;
 
-        fs.readdir('./pics', (err, files) => {
+        fs.readdir('../pics', (err, files) => {
           if (err) {
             return err.message;
           }

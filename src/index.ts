@@ -1,8 +1,8 @@
-const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
-const process = require('process');
-const path = require('path');
-const bodyParser = require('body-parser');
+import express from 'express';
+import sqlite3 from 'sqlite3';
+import process from 'process';
+import path from 'path';
+import bodyParser from 'body-parser';
 
 const app = express();
 
@@ -21,15 +21,18 @@ app.listen(port, () => {
   console.log(`Runnin' like crazy on ${port}`);
 });
 
-const db = new sqlite3.Database(getAbsolutePath('/db/comparo.db'), (err) => {
-  if (err) {
-    console.error(err.message);
-    throw err;
-  } else {
-    db.run('PRAGMA foreign_keys = ON;');
-    console.log('Connected to database comparo.db');
+const db = new (sqlite3.verbose().Database)(
+  getAbsolutePath('/db/comparo.db'),
+  (err) => {
+    if (err) {
+      console.error(err.message);
+      throw err;
+    } else {
+      db.run('PRAGMA foreign_keys = ON;');
+      console.log('Connected to database comparo.db');
+    }
   }
-});
+);
 
 const addPicPath = (pic) => ({
   ...pic,
