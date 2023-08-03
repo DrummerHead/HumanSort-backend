@@ -21,7 +21,7 @@ app.listen(port, () => {
   console.log(`Runnin' like crazy on ${port}`);
 });
 
-const db = new sqlite3.Database(getAbsolutePath('comparo.db'), (err) => {
+const db = new sqlite3.Database(getAbsolutePath('/db/comparo.db'), (err) => {
   if (err) {
     console.error(err.message);
     throw err;
