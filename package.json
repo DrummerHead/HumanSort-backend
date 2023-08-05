@@ -7,6 +7,7 @@
     "build": "npx tsc",
     "start": "concurrently -n \"TSC,EXP\" -c \"auto\" \"npx tsc --watch\" \"nodemon ./build/index.js\"",
     "lint": "prettier --write .",
+    "sync": "cp -r ./src/shared ../frontend/src/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "DrummerHead",
