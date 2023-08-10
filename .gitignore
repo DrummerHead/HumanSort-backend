@@ -2,6 +2,7 @@
 
 # project specific
 pics/
+db/comparo.db
 
 # dependencies
 /node_modules
