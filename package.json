@@ -1,5 +1,5 @@
 {
-  "name": "comparo-backend",
+  "name": "HumanSort-backend",
   "version": "1.0.0",
   "description": "",
   "main": "./build/index.js",
@@ -7,7 +7,7 @@
     "build": "npx tsc",
     "start": "concurrently -n \"TSC,EXP\" -c \"auto\" \"npx tsc --watch\" \"nodemon ./build/index.js\"",
     "lint": "prettier --write .",
-    "sync": "cp -r ./src/shared ../frontend/src/",
+    "sync": "cp -r ./src/shared ../HumanSort-frontend/src/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "DrummerHead",

@@ -140,11 +140,11 @@ It is assumed you have [node and npm installed](https://docs.npmjs.com/downloadi
 This repo comes with some sample images we can use and a script to populate the database. Run this at project root:
 
 ```
+npm install
 cp -r pics-sample pics
 cd db/
 node pollinate.js
 cd ..
-npm install
 ```
 
 And to run it:
