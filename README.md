@@ -1,14 +1,14 @@
 # HumanSort-backend
 
-HumanSort is a single page web application that helps sorting an array of pictures according to human preference.
+![HumanSort-backend logo.png](./HumanSort-backend-logo.png)
 
+HumanSort is a single page web application that helps sorting an array of pictures according to human preference.
 
 ## Background
 
 With algorithms such as [MergeSort](https://en.wikipedia.org/wiki/Merge_sort) and [QuickSort](https://en.wikipedia.org/wiki/Quicksort) the entities being sorted have an inherent nature that facilitates their sorting. If you are sorting an array of numbers, strings or dates, each entity can be compared with each other and a predicate of "is A bigger than B" can easily be answered.
 
 The use case for HumanSort is entities for which there is no inherent nature that facilitates their sorting, and thus the answer for "is A bigger than B" has to be handled by an external judge, in this case human preference.
-
 
 ## Algorithm
 
@@ -125,9 +125,9 @@ const ranked = ['🍒', '🍌', '🍓', '🍇', '🍑', '🍍', '🍋'];
 
 The backend consists of:
 
-* [SQLite](https://www.sqlite.org/) database
-* [node-sqlite3](https://github.com/TryGhost/node-sqlite3) SQLite driver
-* [Express](https://github.com/expressjs/express) backend serving API
+- [SQLite](https://www.sqlite.org/) database
+- [node-sqlite3](https://github.com/TryGhost/node-sqlite3) SQLite driver
+- [Express](https://github.com/expressjs/express) backend serving API
 
 You can see the database schema and API endpoints documentation at the [shared folder](/src/shared) in [types.ts](/src/shared/types.ts).
 
@@ -166,7 +166,6 @@ cd ..
 ```
 
 And same steps as above to run it.
-
 
 ## Companion repository
 
