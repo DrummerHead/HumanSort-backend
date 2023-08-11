@@ -128,10 +128,32 @@ The backend consists of:
 - [SQLite](https://www.sqlite.org/) database
 - [node-sqlite3](https://github.com/TryGhost/node-sqlite3) SQLite driver
 - [Express](https://github.com/expressjs/express) backend serving API
+- [TypeScript](https://www.typescriptlang.org/)
 
 You can see the database schema and API endpoints documentation at the [shared folder](/src/shared) in [types.ts](/src/shared/types.ts).
 
-## Installing
+## Installing both projects
+
+It is assumed you have [node and npm installed](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+
+To have a fully functioning webapp, you'll need to install both the backend and frontend. Run this on your terminal to create a folder called `HumanSort`, install backend, populate with sample images and install frontend:
+
+```
+mkdir HumanSort
+cd HumanSort/
+git clone git@github.com:DrummerHead/HumanSort-backend.git
+cd HumanSort-backend/
+npm install
+cp -r pics-sample pics
+cd db/
+node pollinate.js
+cd ../../
+git clone git@github.com:DrummerHead/HumanSort-frontend.git
+cd HumanSort-frontend/
+npm install
+```
+
+## Installing only the backend
 
 For now, this application is intended to be used locally on your machine, to sort already existing images you have in your harddrive. You should put these images inside of the `/pics/` folder.
 
@@ -167,6 +189,26 @@ cd ..
 
 And same steps as above to run it.
 
+## Running both projects
+
+Open a terminal window at the root of `HumanSort-backend` and type:
+
+```
+npm run start
+```
+
+To run the backend server at [http://localhost:7777/](http://localhost:7777/)
+
+Open anoter terminal window at the root of `HumanSort-frontend` and type:
+
+```
+npm run start
+```
+
+To run the frontend server at [http://localhost:3000/](http://localhost:3000/)
+
+Interact with the application at [http://localhost:3000/](http://localhost:3000/)
+
 ## Companion repository
 
-This repository contains only the backend, for the full experience follow the README instructions at [HumanSort-frontend](https://github.com/DrummerHead/HumanSort-frontend)
+Find the code for the frontend at [HumanSort-frontend](https://github.com/DrummerHead/HumanSort-frontend/)
