@@ -4,6 +4,20 @@
 
 HumanSort is a single page web application that helps sorting an array of pictures according to human preference.
 
+## Features
+
+Compare mode where you insert an unranked image to the array of ranked images through choosing the image you prefer:
+
+![HumanSort Compare mode](https://i.imgur.com/NgBvAe8.gif)
+
+Gallery mode where you can see all the ranked images and re-order them in case you don't fully agree with past decisions:
+
+![HumanSort Gallery mode](https://i.imgur.com/wKKTkca.gif)
+
+Three color schemes to choose from:
+
+![HumanSort color schemes](https://i.imgur.com/0ie89vr.gif)
+
 ## Background
 
 With algorithms such as [MergeSort](https://en.wikipedia.org/wiki/Merge_sort) and [QuickSort](https://en.wikipedia.org/wiki/Quicksort) the entities being sorted have an inherent nature that facilitates their sorting. If you are sorting an array of numbers, strings or dates, each entity can be compared with each other and a predicate of "is A bigger than B" can easily be answered.
@@ -159,7 +173,7 @@ For now, this application is intended to be used locally on your machine, to sor
 
 It is assumed you have [node and npm installed](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
 
-This repo comes with some sample images we can use and a script to populate the database. Run this at project root:
+This repo comes with some sample images we can use and a script to populate the database. The images of cats where AI generated using [this online tool](https://observablehq.com/@drummerhead/generate-computerender-links). Run this at project root to use the sample images and an initial database state:
 
 ```
 npm install
