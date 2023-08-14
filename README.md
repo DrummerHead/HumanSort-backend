@@ -8,15 +8,15 @@ HumanSort is a single page web application that helps sorting an array of pictur
 
 Compare mode where you insert an unranked image to the array of ranked images through choosing the image you prefer:
 
-![HumanSort Compare mode](https://i.imgur.com/NgBvAe8.gif)
+![HumanSort Compare mode](https://i.imgur.com/Gw7x47k.gif)
 
 Gallery mode where you can see all the ranked images and re-order them in case you don't fully agree with past decisions:
 
-![HumanSort Gallery mode](https://i.imgur.com/wKKTkca.gif)
+![HumanSort Gallery mode](https://i.imgur.com/9ijwhRw.gif)
 
 Three color schemes to choose from:
 
-![HumanSort color schemes](https://i.imgur.com/0ie89vr.gif)
+![HumanSort color schemes](https://i.imgur.com/wotx5FT.gif)
 
 ## Background
 
